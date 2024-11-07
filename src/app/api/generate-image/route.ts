@@ -1,22 +1,21 @@
 import { NextResponse } from "next/server";
 import axios from "axios";
+import FormData from "form-data";
+import { Buffer } from "buffer"; // Use Buffer to handle binary data
 
 export async function POST(req: Request) {
   try {
-    // Parse the prompt from the request body
     const { prompt } = await req.json();
 
-    // Set up the payload for the image generation
-    const payload = {
+    // Step 1: Generate the image
+    const generatePayload = {
       prompt: prompt || "Lighthouse on a cliff overlooking the ocean",
       output_format: "png",
     };
 
-    // Note: One account key has 5 free trial image generations.
-
-    const response = await axios.postForm(
+    const generateResponse = await axios.postForm(
       "https://api.stability.ai/v2beta/stable-image/generate/core",
-      payload,
+      generatePayload,
       {
         headers: {
           Authorization: `Bearer sk-hH0RHTs05UgUGHPxel1dha0i0YInjenGWCwJdXZJomCfQL9p`,
@@ -26,24 +25,57 @@ export async function POST(req: Request) {
       }
     );
 
-    if (response.status === 200) {
-      const imageBase64 = Buffer.from(response.data).toString("base64");
+    if (generateResponse.status !== 200) {
+      throw new Error(`Image generation failed: ${generateResponse.status}`);
+    }
+
+    // Convert generated image to a buffer
+    const generatedImageBuffer = Buffer.from(generateResponse.data);
+
+    // Step 2: Remove background from generated image
+    const removeBackgroundFormData = new FormData();
+    removeBackgroundFormData.append(
+      "image",
+      generatedImageBuffer,
+      "generated-image.png"
+    );
+    removeBackgroundFormData.append("output_format", "png");
+
+    const removeBackgroundResponse = await axios.post(
+      "https://api.stability.ai/v2beta/stable-image/edit/remove-background",
+      removeBackgroundFormData,
+      {
+        headers: {
+          Authorization: `Bearer sk-hH0RHTs05UgUGHPxel1dha0i0YInjenGWCwJdXZJomCfQL9p`,
+          ...removeBackgroundFormData.getHeaders(),
+          Accept: "image/*",
+        },
+        responseType: "arraybuffer",
+      }
+    );
+
+    if (removeBackgroundResponse.status === 200) {
+      const finalImageBase64 = Buffer.from(
+        removeBackgroundResponse.data
+      ).toString("base64");
 
       return NextResponse.json(
         {
-          message: "Image generated successfully.",
+          message: "Image generated and background removed successfully.",
           prompt,
-          image: `data:image/png;base64,${imageBase64}`,
+          image: `data:image/png;base64,${finalImageBase64}`,
         },
         { status: 201 }
       );
     } else {
-      throw new Error(`${response.status}: ${response.data.toString()}`);
+      throw new Error(
+        `Background removal failed: ${removeBackgroundResponse.status}`
+      );
     }
   } catch (error) {
-    console.error("Error generating image:", error);
+    console.error("Error processing image:", error);
     return NextResponse.json(
-      { message: "Error generating image", error },
+      { message: "Error processing image", error },
       { status: 500 }
     );
   }
