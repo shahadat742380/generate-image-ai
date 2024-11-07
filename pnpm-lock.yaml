@@ -17,6 +17,9 @@ importers:
       html2canvas:
         specifier: ^1.4.1
         version: 1.4.1
+      merge-images:
+        specifier: ^2.0.0
+        version: 2.0.0
       next:
         specifier: 15.0.2
         version: 15.0.2(react-dom@19.0.0-rc-02c0e824-20241028(react@19.0.0-rc-02c0e824-20241028))(react@19.0.0-rc-02c0e824-20241028)
@@ -27,6 +30,9 @@ importers:
         specifier: 19.0.0-rc-02c0e824-20241028
         version: 19.0.0-rc-02c0e824-20241028(react@19.0.0-rc-02c0e824-20241028)
     devDependencies:
+      '@types/merge-images':
+        specifier: ^1.2.4
+        version: 1.2.4
       '@types/node':
         specifier: ^20
         version: 20.17.6
@@ -307,6 +313,9 @@ packages:
 
   '@types/json5@0.0.29':
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
+
+  '@types/merge-images@1.2.4':
+    resolution: {integrity: sha512-BxDqLWxciBwPv0WYjB74hRZWUIN2DPJdUsTvYEsf+TLI0qbkcFvoazVdAMG4GroT/01YekEYqWDHVtyOCwr6tQ==}
 
   '@types/node@20.17.6':
     resolution: {integrity: sha512-VEI7OdvK2wP7XHnsuXbAJnEpEkF6NjSN45QJlL4VGqZSXsnicpesdTWsg9RISeSdYd3yeRj/y3k5KGjUXYnFwQ==}
@@ -1160,6 +1169,9 @@ packages:
   lru-cache@10.4.3:
     resolution: {integrity: sha512-JNAzZcXrCt42VGLuYz0zfAzDfAvJWW6AfYlDBQyDV5DClI2m5sAmK+OIO7s59XfsRsWHp02jAJrRadPRGTt6SQ==}
 
+  merge-images@2.0.0:
+    resolution: {integrity: sha512-bpI4j54n/Zl6ZTgxaR3xWou/lqI53RAAt8peXijW37BKqoON83LQ7XCZqtFiwzBfEXIws1isYyR06584yffAyA==}
+
   merge2@1.4.1:
     resolution: {integrity: sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==}
     engines: {node: '>= 8'}
@@ -1904,6 +1916,10 @@ snapshots:
       tslib: 2.8.1
 
   '@types/json5@0.0.29': {}
+
+  '@types/merge-images@1.2.4':
+    dependencies:
+      '@types/node': 20.17.6
 
   '@types/node@20.17.6':
     dependencies:
@@ -2953,6 +2969,8 @@ snapshots:
       js-tokens: 4.0.0
 
   lru-cache@10.4.3: {}
+
+  merge-images@2.0.0: {}
 
   merge2@1.4.1: {}
 
