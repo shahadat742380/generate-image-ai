@@ -4,6 +4,8 @@ import { useState, useRef } from "react";
 import axios from "axios";
 import Image from "next/image";
 
+
+
 const ImageGenerator = () => {
   const [prompt, setPrompt] = useState("");
   const [imageUrl, setImageUrl] = useState("");

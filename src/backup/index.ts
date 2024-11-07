@@ -21,7 +21,7 @@ export async function POST(req: Request) {
       generatePayload,
       {
         headers: {
-          Authorization: `Bearer sk-URErEVonCu5s7CyzSu9LsjUeOdMZgjF10IMOCgvkGVRCnNyF`,
+          Authorization: `Bearer sk-Oj0p6pg5MJDUcaoC4PsY9hNdTO5E27Aw3VspWkN34ybEvppU`,
           Accept: "image/*",
         },
         responseType: "arraybuffer",
@@ -49,7 +49,7 @@ export async function POST(req: Request) {
       removeBackgroundFormData,
       {
         headers: {
-          Authorization: `Bearer sk-URErEVonCu5s7CyzSu9LsjUeOdMZgjF10IMOCgvkGVRCnNyF`,
+          Authorization: `Bearer sk-Oj0p6pg5MJDUcaoC4PsY9hNdTO5E27Aw3VspWkN34ybEvppU`,
           ...removeBackgroundFormData.getHeaders(),
           Accept: "image/*",
         },
