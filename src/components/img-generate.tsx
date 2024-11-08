@@ -85,7 +85,7 @@ const ImageGenerator = () => {
             onClick={handleDownloadImage}
             className="w-full mt-4 bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition duration-200"
           >
-            Download as Image
+            Download Image
           </button>
         </div>
       )}
