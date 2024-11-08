@@ -19,20 +19,17 @@ const ImageMerge = () => {
     delta: any,
     position: any
   ) => {
-    // Update size and position after resizing
     const newWidth = ref.offsetWidth;
     const newHeight = ref.offsetHeight;
     setSize({ width: newWidth, height: newHeight });
     setPosition(position);
 
-    // Reapply resizing on image2
     if (image2) {
       resizeImage(image2, newWidth, newHeight, setImage2);
     }
   };
 
   const handleDragStop = (e: any, d: any) => {
-    // Update position after dragging
     setPosition({ x: d.x, y: d.y });
   };
 
@@ -94,7 +91,7 @@ const ImageMerge = () => {
   };
 
   return (
-    <div className="flex flex-col items-center space-y-6 py-8">
+    <div className="flex flex-col items-center space-y-6 py-8 min-h-screen">
       <h1 className="text-2xl font-semibold">Upload and Merge Images</h1>
 
       <div className="mt-10 max-w-3xl mx-auto grid grid-cols-2 gap-10">
@@ -138,11 +135,7 @@ const ImageMerge = () => {
               className="border border-black border-dashed"
               bounds="parent"
             >
-              <img
-                src={image2}
-                alt="Logo"
-                className="h-full w-full"
-              />
+              <img src={image2} alt="Logo" className="h-full w-full" />
             </Rnd>
           )}
         </div>
