@@ -1,41 +1,20 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @next/next/no-img-element */
 
 "use client";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import mergeImages from "merge-images";
-import { Rnd } from "react-rnd";
+import Draggable, { DraggableEvent, DraggableData } from "react-draggable";
 
 const ImageMerge = () => {
+  const draggableRef = useRef(null);
   const [image1, setImage1] = useState<string | null>(null);
   const [image2, setImage2] = useState<string | null>(null);
-  const [position, setPosition] = useState({ x: 180, y: 180 });
-  const [size, setSize] = useState({ width: 200, height: 200 });
+  const [logoPosition, setLogoPosition] = useState<{ x: number; y: number }>({
+    x: 180,
+    y: 180,
+  });
 
-  const handleResizeStop = (
-    e: any,
-    direction: any,
-    ref: HTMLElement,
-    delta: any,
-    position: any
-  ) => {
-    // Update size and position after resizing
-    const newWidth = ref.offsetWidth;
-    const newHeight = ref.offsetHeight;
-    setSize({ width: newWidth, height: newHeight });
-    setPosition(position);
-
-    // Reapply resizing on image2
-    if (image2) {
-      resizeImage(image2, newWidth, newHeight, setImage2);
-    }
-  };
-
-  const handleDragStop = (e: any, d: any) => {
-    // Update position after dragging
-    setPosition({ x: d.x, y: d.y });
-  };
-
+  // Handle image upload and convert to base64, with resizing
   const handleImageUpload = (
     e: React.ChangeEvent<HTMLInputElement>,
     setImage: React.Dispatch<React.SetStateAction<string | null>>,
@@ -48,6 +27,7 @@ const ImageMerge = () => {
       const reader = new FileReader();
       reader.onloadend = () => {
         const base64 = reader.result as string;
+
         if (resize) {
           resizeImage(base64, width, height, setImage);
         } else {
@@ -80,11 +60,17 @@ const ImageMerge = () => {
     };
   };
 
+  // Track the position of image2 as it's dragged
+  const handleDrag = (e: DraggableEvent, data: DraggableData) => {
+    setLogoPosition({ x: data.x, y: data.y });
+  };
+
+  // Download the merged image
   const handleDownload = async () => {
     if (image1 && image2) {
       const b64 = await mergeImages([
         { src: image1 },
-        { src: image2, x: position.x, y: position.y, opacity: 0.8 },
+        { src: image2, x: logoPosition.x, y: logoPosition.y, opacity: 0.8 },
       ]);
       const link = document.createElement("a");
       link.href = b64;
@@ -97,28 +83,31 @@ const ImageMerge = () => {
     <div className="flex flex-col items-center space-y-6 py-8">
       <h1 className="text-2xl font-semibold">Upload and Merge Images</h1>
 
+      {/* Upload sections for each image */}
       <div className="mt-10 max-w-3xl mx-auto grid grid-cols-2 gap-10">
         <div className="flex flex-col items-center">
-          <p className="mb-5 text-blue-600 text-xl font-bold">
-            Upload T-Shirt Image
-          </p>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => handleImageUpload(e, setImage1, true, 572, 654)}
-            className="mb-4"
-          />
+          <div>
+            <p className="mb-5 text-blue-600 text-xl font-bold">
+              Upload T-Shirt Image
+            </p>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => handleImageUpload(e, setImage1, true, 572, 654)}
+              className="mb-4"
+            />
+          </div>
         </div>
         <div className="flex flex-col items-center">
-          <p className="mb-5 text-blue-600 text-xl font-bold">Upload Logo</p>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) =>
-              handleImageUpload(e, setImage2, true, size.width, size.height)
-            }
-            className="mb-4"
-          />
+          <div>
+            <p className="mb-5 text-blue-600 text-xl font-bold">Upload Logo</p>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => handleImageUpload(e, setImage2, true, 200, 200)}
+              className="mb-4"
+            />
+          </div>
         </div>
       </div>
 
@@ -130,20 +119,24 @@ const ImageMerge = () => {
             className="object-contain absolute inset-0"
           />
           {image2 && (
-            <Rnd
-              size={{ width: size.width, height: size.height }}
-              position={{ x: position.x, y: position.y }}
-              onDragStop={handleDragStop}
-              onResizeStop={handleResizeStop}
-              className="border border-black border-dashed"
+            <Draggable
+              nodeRef={draggableRef}
               bounds="parent"
+              defaultPosition={{ x: 180, y: 180 }}
+              grid={[1, 1]}
+              scale={1}
+              onStart={handleDrag}
+              onDrag={handleDrag}
+              onStop={handleDrag}
             >
-              <img
-                src={image2}
-                alt="Logo"
-                className="h-full w-full"
-              />
-            </Rnd>
+              <div ref={draggableRef} className="cursor-move absolute">
+                <img
+                  src={image2}
+                  alt="Preview 2 (Resized)"
+                  className="h-[200px] w-[200px] border border-dashed border-black opacity-80"
+                />
+              </div>
+            </Draggable>
           )}
         </div>
       )}
