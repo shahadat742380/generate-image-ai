@@ -5,6 +5,7 @@ import FormData from "form-data";
 
 import { Buffer } from "buffer";
 
+// note: Please change the Stability Ai key.
 
 export async function POST(req: Request) {
   try {

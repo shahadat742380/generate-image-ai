@@ -135,7 +135,11 @@ const ImageMerge = () => {
               className="border border-black border-dashed"
               bounds="parent"
             >
-              <img src={image2} alt="Logo" className="h-full w-full" />
+              <img
+                src={image2}
+                alt="Logo"
+                className="h-full w-full opacity-80"
+              />
             </Rnd>
           )}
         </div>
